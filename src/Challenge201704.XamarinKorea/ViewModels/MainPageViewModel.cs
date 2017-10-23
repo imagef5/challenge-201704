@@ -90,15 +90,16 @@ namespace Challenge201704.XamarinKorea.ViewModels
             this.navigationService = navigationService;
             this.dialogService = dialogService;
             this.userService = userService;
-            Task.Run(async () =>
-                        {
-                            IsRefreshing = true;
+            LoadData().ContinueWith( (arg) =>
+                {
+                    IsRefreshing = true;
 
-                            await LoadData();
+                    arg.Wait();
 
-                            IsRefreshing = false;
-                        }
-                    ).Wait();
+                    IsRefreshing = false;
+
+                }, TaskScheduler.FromCurrentSynchronizationContext()
+            );
         }
         #endregion
 
